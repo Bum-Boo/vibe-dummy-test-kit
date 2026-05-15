@@ -1,0 +1,76 @@
+stage: stage-09-ai-risks
+status: implemented
+expectedSummary:
+  critical: 2
+  high: 3
+  medium: 1
+  low: 0
+  info: 0
+expectedFindings:
+  - id: AI-001
+    title: AI-generated HTML rendered without sanitization
+    category: ai-risks
+    severity: high
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+    evidence:
+      - AI-generated HTML is rendered without sanitization
+      - return `<main class="ai-page">${aiGeneratedHtml}</main>`;
+  - id: AI-002
+    title: AI-generated SQL executed without validation
+    category: ai-risks
+    severity: critical
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+      - stages/stage-09-ai-risks/src/local-demo-db.ts
+    evidence:
+      - return executeGeneratedSql(generatedSql);
+      - AI-generated SQL is trusted and sent to a simulated execution path
+  - id: AI-003
+    title: AI output connected to command execution path
+    category: ai-risks
+    severity: critical
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+      - stages/stage-09-ai-risks/src/command-runner.ts
+    evidence:
+      - return planShellCommandFromAi(aiOutput);
+      - AI output is connected to a command execution path
+  - id: AI-004
+    title: Sensitive prompt content included in code
+    category: ai-risks
+    severity: high
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+      - stages/stage-09-ai-risks/docs/injected-note.txt
+    evidence:
+      - fake_internal_ai_prompt_secret_for_training_only
+      - Internal support secret
+  - id: AI-005
+    title: Missing input length or rate limits
+    category: ai-risks
+    severity: medium
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+    evidence:
+      - no input length limit, no rate limit, and no cost guard
+  - id: AI-006
+    title: Unsafe RAG/document instruction handling
+    category: ai-risks
+    severity: high
+    files:
+      - stages/stage-09-ai-risks/src/vulnerable-ai-features.ts
+      - stages/stage-09-ai-risks/docs/injected-note.txt
+    evidence:
+      - local document text is inserted as instructions without isolation
+      - Instruction-looking text
+plannedFindings: []
+notExpectedFindings:
+  - id: AI-SAFE-001
+    title: Safe AI feature patterns should not be flagged
+    files:
+      - stages/stage-09-ai-risks/src/safe-ai-features.ts
+notes:
+  - No real LLM API or shell execution exists in this stage.
+  - The prompt secret is a fake training string only.
+

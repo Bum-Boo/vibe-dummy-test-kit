@@ -1,0 +1,63 @@
+id: stage-09-ai-risks
+order: 9
+title: AI feature security risks
+status: implemented
+focus: Unsafe mock AI integration patterns in local-only SaaS features.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/ai/profile
+    - /api/ai/sql
+    - /api/ai/html-page
+    - /api/ai/support
+    - /api/ai/doc-summary
+services: []
+expectedFindingsFile: ../../expected/stage-09.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: AI-001
+    title: AI-generated HTML rendered without sanitization
+    severity: high
+    files:
+      - src/vulnerable-ai-features.ts
+  - id: AI-002
+    title: AI-generated SQL executed without validation
+    severity: critical
+    files:
+      - src/vulnerable-ai-features.ts
+      - src/local-demo-db.ts
+  - id: AI-003
+    title: AI output connected to command execution path
+    severity: critical
+    files:
+      - src/vulnerable-ai-features.ts
+      - src/command-runner.ts
+  - id: AI-004
+    title: Sensitive prompt content included in code
+    severity: high
+    files:
+      - src/vulnerable-ai-features.ts
+  - id: AI-005
+    title: Missing input length or rate limits
+    severity: medium
+    files:
+      - src/vulnerable-ai-features.ts
+  - id: AI-006
+    title: Unsafe RAG/document instruction handling
+    severity: high
+    files:
+      - src/vulnerable-ai-features.ts
+      - docs/injected-note.txt
+negativeExamples:
+  - id: AI-SAFE-001
+    title: Safe AI feature patterns should not be flagged
+    files:
+      - src/safe-ai-features.ts
+safety:
+  - Mock LLM responses are deterministic local strings.
+  - No shell command is executed.
+  - No real LLM API or API key is used.
+  - Prompt secret values are fake training strings only.
+

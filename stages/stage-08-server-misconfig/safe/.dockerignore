@@ -1,0 +1,5 @@
+.env
+.env.*
+public/backups
+node_modules
+

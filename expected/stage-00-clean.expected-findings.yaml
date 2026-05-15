@@ -1,0 +1,10 @@
+stage: stage-00-clean
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 0
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings: []
+plannedFindings: []

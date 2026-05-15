@@ -1,0 +1,18 @@
+# Stage 01 intentionally vulnerable fixture.
+# This workflow is not meant to run. It contains fake values for scanner training only.
+
+name: Fake Stage 01 Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fake-deploy:
+    runs-on: ubuntu-latest
+    env:
+      STRIPE_SECRET_KEY: fake_stripe_secret_for_training_only
+      OPENAI_API_KEY: fake_openai_key_for_training_only
+    steps:
+      - name: Explain fixture
+        run: echo "Fake workflow for BTS_sec Stage 01 secret detection only"
+

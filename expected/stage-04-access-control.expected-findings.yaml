@@ -1,0 +1,26 @@
+stage: stage-04-access-control
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: BAC-001
+    title: Project detail endpoint missing ownership check
+    category: access-control
+    severity: high
+  - id: BAC-002
+    title: Order detail endpoint missing ownership check
+    category: access-control
+    severity: high
+  - id: BAC-003
+    title: Project delete endpoint missing ownership check
+    category: access-control
+    severity: high
+plannedFindings: []
+notExpectedFindings:
+  - id: BAC-004
+    title: Safe current-user project list should not be flagged
+

@@ -1,0 +1,39 @@
+stage: stage-08-server-misconfig
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 4
+  medium: 3
+  low: 0
+  info: 0
+expectedFindings:
+  - id: INFRA-001
+    title: Container runs as root
+    category: server-misconfig
+    severity: medium
+  - id: INFRA-002
+    title: .env copied or included in image context
+    category: server-misconfig
+    severity: high
+  - id: INFRA-003
+    title: Missing security headers
+    category: security-headers
+    severity: medium
+  - id: INFRA-004
+    title: Overly permissive CORS
+    category: server-misconfig
+    severity: high
+  - id: INFRA-005
+    title: Debug endpoint exposed
+    category: server-misconfig
+    severity: medium
+  - id: INFRA-006
+    title: Sensitive headers logged
+    category: logging
+    severity: high
+  - id: INFRA-007
+    title: Backup file publicly accessible
+    category: server-misconfig
+    severity: high
+plannedFindings: []
+

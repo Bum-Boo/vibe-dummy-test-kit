@@ -1,0 +1,66 @@
+stage: stage-07-file-upload
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 2
+  low: 0
+  info: 0
+expectedFindings:
+  - id: FILE-001
+    title: Original filename used for uploaded file
+    category: file-upload
+    severity: high
+    files:
+      - stages/stage-07-file-upload/src/vulnerable-upload-route.ts
+    evidence:
+      - const filename = file.name;
+  - id: FILE-002
+    title: Upload saved under publicly served directory
+    category: file-upload
+    severity: high
+    files:
+      - stages/stage-07-file-upload/src/vulnerable-upload-route.ts
+    evidence:
+      - 'await writeFile(`./public/uploads/${filename}`, buffer);'
+      - const publicUrl = `/uploads/${filename}`;
+  - id: FILE-003
+    title: Missing file size limit
+    category: file-upload
+    severity: medium
+    files:
+      - stages/stage-07-file-upload/src/vulnerable-upload-route.ts
+    evidence:
+      - no file size limit
+  - id: FILE-004
+    title: Missing MIME validation
+    category: file-upload
+    severity: medium
+    files:
+      - stages/stage-07-file-upload/src/vulnerable-upload-route.ts
+    evidence:
+      - no MIME type validation
+  - id: FILE-005
+    title: SVG allowed without sanitization
+    category: file-upload
+    severity: high
+    files:
+      - stages/stage-07-file-upload/src/vulnerable-upload-route.ts
+    evidence:
+      - const allowedExtensions = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
+      - no SVG sanitization
+plannedFindings: []
+notExpectedFindings:
+  - id: FILE-006
+    title: Safe upload handler should not be flagged
+    files:
+      - stages/stage-07-file-upload/src/safe-upload-route.ts
+    evidence:
+      - randomUUID
+      - maxUploadBytes
+      - allowedMimeTypes
+      - privateStorageRoot
+notes:
+  - All sample uploads are harmless and local-only.
+  - Safe storage is documented as local private storage, with MinIO as the intended controlled-access alternative.
+

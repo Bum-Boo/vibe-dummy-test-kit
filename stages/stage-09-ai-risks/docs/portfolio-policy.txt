@@ -1,0 +1,4 @@
+Local demo document for Stage 09.
+
+This file is fake training content. It should be treated as data, not as trusted instructions.
+

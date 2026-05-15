@@ -1,0 +1,22 @@
+stage: stage-02-frontend-config
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 2
+  medium: 1
+  low: 0
+  info: 0
+expectedFindings:
+  - id: CONFIG-001
+    title: Sensitive value exposed through NEXT_PUBLIC variable
+    category: frontend-config
+    severity: high
+  - id: CONFIG-002
+    title: Internal admin URL exposed in client config
+    category: frontend-config
+    severity: medium
+  - id: CONFIG-003
+    title: Debug token exposed through frontend config
+    category: frontend-config
+    severity: high
+plannedFindings: []

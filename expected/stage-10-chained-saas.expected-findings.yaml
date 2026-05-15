@@ -1,0 +1,39 @@
+stage: stage-10-chained-saas
+status: implemented
+expectedSummary:
+  critical: 1
+  high: 6
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: CHAIN-001
+    title: Exposed privileged-looking key in frontend
+    category: chained-saas
+    severity: critical
+  - id: CHAIN-002
+    title: Project IDOR / missing ownership check
+    category: access-control
+    severity: high
+  - id: CHAIN-003
+    title: AI-generated HTML rendered unsafely
+    category: xss
+    severity: high
+  - id: CHAIN-004
+    title: Unsafe public file upload
+    category: file-upload
+    severity: high
+  - id: CHAIN-005
+    title: Frontend-only admin protection
+    category: auth
+    severity: high
+  - id: CHAIN-006
+    title: Overly permissive CORS/server config
+    category: server-misconfig
+    severity: high
+  - id: CHAIN-007
+    title: Excessive data exposure
+    category: api-data-exposure
+    severity: high
+plannedFindings: []
+

@@ -1,0 +1,51 @@
+stage: stage-02-frontend-config
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 2
+  medium: 1
+  low: 0
+  info: 0
+expectedFindings:
+  - id: CONFIG-001
+    title: Sensitive value exposed through NEXT_PUBLIC variable
+    category: frontend-config
+    severity: high
+    files:
+      - stages/stage-02-frontend-config/.env.example
+      - stages/stage-02-frontend-config/src/client-config.ts
+      - stages/stage-02-frontend-config/dist/static/config.js
+    evidence:
+      - NEXT_PUBLIC_ADMIN_API_KEY=fake_public_admin_api_key_for_config_training_only
+      - NEXT_PUBLIC_ADMIN_API_KEY
+      - fake_public_admin_api_key_for_config_training_only
+  - id: CONFIG-002
+    title: Internal admin URL exposed in client config
+    category: frontend-config
+    severity: medium
+    files:
+      - stages/stage-02-frontend-config/.env.example
+      - stages/stage-02-frontend-config/src/client-config.ts
+      - stages/stage-02-frontend-config/src/runtime-config.ts
+      - stages/stage-02-frontend-config/dist/static/config.js
+    evidence:
+      - NEXT_PUBLIC_INTERNAL_API_URL=http://localhost:4000/internal/admin
+      - http://localhost:4000/internal/admin
+  - id: CONFIG-003
+    title: Debug token exposed through frontend config
+    category: frontend-config
+    severity: high
+    files:
+      - stages/stage-02-frontend-config/.env.example
+      - stages/stage-02-frontend-config/src/client-config.ts
+      - stages/stage-02-frontend-config/src/runtime-config.ts
+      - stages/stage-02-frontend-config/dist/static/config.js
+    evidence:
+      - VITE_BACKEND_ADMIN_TOKEN=fake_vite_backend_admin_token_for_training_only
+      - REACT_APP_DEBUG_TOKEN=fake_react_debug_token_for_training_only
+      - fake_react_debug_token_for_training_only
+plannedFindings: []
+notes:
+  - This stage focuses on frontend config semantics rather than real credential formats.
+  - All values are fake training strings.
+

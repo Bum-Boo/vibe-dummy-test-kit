@@ -1,0 +1,71 @@
+id: stage-08-server-misconfig
+order: 8
+title: Server and infrastructure misconfiguration
+status: implemented
+focus: Docker, reverse proxy, environment, logging, and server configuration issues.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /
+    - /api/admin/export
+    - /api/debug/session
+services: []
+expectedFindingsFile: ../../expected/stage-08.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: INFRA-001
+    title: Container runs as root
+    severity: medium
+    files:
+      - Dockerfile
+  - id: INFRA-002
+    title: .env copied or included in image context
+    severity: high
+    files:
+      - Dockerfile
+      - .env
+  - id: INFRA-003
+    title: Missing security headers
+    severity: medium
+    files:
+      - nginx/default.conf
+  - id: INFRA-004
+    title: Overly permissive CORS
+    severity: high
+    files:
+      - src/server-config.ts
+  - id: INFRA-005
+    title: Debug endpoint exposed
+    severity: medium
+    files:
+      - src/server-config.ts
+  - id: INFRA-006
+    title: Sensitive headers logged
+    severity: high
+    files:
+      - src/request-logger.ts
+  - id: INFRA-007
+    title: Backup file publicly accessible
+    severity: high
+    files:
+      - public/backups/users-backup.json
+supportingMisconfigurations:
+  - title: Local database and admin UI ports exposed unnecessarily
+    files:
+      - docker-compose.yml
+    note: Bound to 127.0.0.1 for safety; included for manual inspection.
+negativeExamples:
+  - id: INFRA-SAFE-001
+    title: Safe contrast config should not be flagged
+    files:
+      - safe/Dockerfile
+      - safe/.dockerignore
+      - safe/nginx.conf
+      - safe/server-config.ts
+safety:
+  - All tokens, passwords, and backup values are fake training strings.
+  - Compose ports are localhost-only.
+  - This stage is code-scannable and should not be deployed publicly.
+

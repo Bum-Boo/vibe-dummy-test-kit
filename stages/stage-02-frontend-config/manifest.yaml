@@ -1,0 +1,48 @@
+id: stage-02-frontend-config
+order: 2
+title: Frontend config mistakes
+status: implemented
+focus: Framework-prefixed environment variables and public runtime config exposed to browsers.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /stage-02-code-scan-only
+services: []
+expectedFindingsFile: ../../expected/stage-02.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: CONFIG-001
+    title: Sensitive value exposed through NEXT_PUBLIC variable
+    severity: high
+    files:
+      - .env.example
+      - src/client-config.ts
+      - dist/static/config.js
+  - id: CONFIG-002
+    title: Internal admin URL exposed in client config
+    severity: medium
+    files:
+      - .env.example
+      - src/client-config.ts
+      - src/runtime-config.ts
+      - dist/static/config.js
+  - id: CONFIG-003
+    title: Debug token exposed through frontend config
+    severity: high
+    files:
+      - .env.example
+      - src/client-config.ts
+      - src/runtime-config.ts
+      - dist/static/config.js
+fakeConfigValues:
+  - fake_public_admin_api_key_for_config_training_only
+  - http://localhost:4000/internal/admin
+  - fake_vite_backend_admin_token_for_training_only
+  - fake_react_debug_token_for_training_only
+safety:
+  - Values are fake training strings.
+  - No real backend admin service is contacted.
+  - This stage is code-scannable and does not need a running vulnerable app.
+

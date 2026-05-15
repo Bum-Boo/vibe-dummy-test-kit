@@ -1,0 +1,9 @@
+// Stage 02 intentionally vulnerable built config fixture.
+// FAKE TRAINING VALUES ONLY.
+window.__PUBLIC_RUNTIME_CONFIG__ = {
+  NEXT_PUBLIC_ADMIN_API_KEY: "fake_public_admin_api_key_for_config_training_only",
+  NEXT_PUBLIC_INTERNAL_API_URL: "http://localhost:4000/internal/admin",
+  VITE_BACKEND_ADMIN_TOKEN: "fake_vite_backend_admin_token_for_training_only",
+  REACT_APP_DEBUG_TOKEN: "fake_react_debug_token_for_training_only"
+};
+

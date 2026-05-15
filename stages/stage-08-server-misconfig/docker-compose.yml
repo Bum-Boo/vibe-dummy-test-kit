@@ -1,0 +1,26 @@
+services:
+  target-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:18088:3000"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: stage08_demo
+      POSTGRES_PASSWORD: fake_database_password_for_training_only
+      POSTGRES_DB: stage08_demo
+    # Stage 08 intentionally vulnerable: database admin port is exposed unnecessarily, but only on localhost.
+    ports:
+      - "127.0.0.1:15432:5432"
+
+  adminer:
+    image: adminer:4
+    # Stage 08 intentionally vulnerable: database admin UI is exposed unnecessarily, but only on localhost.
+    ports:
+      - "127.0.0.1:18080:8080"
+

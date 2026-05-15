@@ -1,0 +1,50 @@
+id: stage-05-api-data-exposure
+order: 5
+title: API data exposure and mass assignment
+status: implemented
+focus: APIs that expose sensitive fields or blindly trust request bodies during updates.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/users/:id
+    - /api/users/me
+    - /api/admin/export
+services: []
+expectedFindingsFile: ../../expected/stage-05.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: API-001
+    title: Excessive data exposure in user detail endpoint
+    severity: high
+    files:
+      - src/api-data-routes.ts
+      - src/demo-data.ts
+  - id: API-002
+    title: passwordHash or refreshToken returned in API response
+    severity: high
+    files:
+      - src/api-data-routes.ts
+      - src/demo-data.ts
+  - id: API-003
+    title: Mass assignment risk from direct request body update
+    severity: high
+    files:
+      - src/api-data-routes.ts
+  - id: API-004
+    title: Privileged fields modifiable by client input
+    severity: high
+    files:
+      - src/api-data-routes.ts
+      - src/manual-demo.ts
+negativeExamples:
+  - id: API-SAFE-001
+    title: Safe update uses an explicit allowlist
+    route: PATCH /api/users/me/safe
+    reason: Only displayName and portfolioTitle are copied from client input.
+safety:
+  - All password hashes, refresh tokens, and billing IDs are fake local training values.
+  - The vulnerable update only mutates in-memory demo data.
+  - This stage is code-scannable and does not need a running vulnerable app.
+

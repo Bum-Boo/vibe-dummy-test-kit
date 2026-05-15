@@ -1,0 +1,30 @@
+stage: stage-06-user-content-xss
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 1
+  low: 0
+  info: 0
+expectedFindings:
+  - id: XSS-001
+    title: User-controlled bio rendered via dangerouslySetInnerHTML
+    category: xss
+    severity: high
+  - id: XSS-002
+    title: Markdown raw HTML rendered without sanitization
+    category: xss
+    severity: high
+  - id: XSS-003
+    title: Admin inquiry content rendered as HTML
+    category: xss
+    severity: high
+  - id: XSS-004
+    title: Missing or weak CSP
+    category: security-headers
+    severity: medium
+plannedFindings: []
+notExpectedFindings:
+  - id: XSS-005
+    title: Safe escaped component should not be flagged
+

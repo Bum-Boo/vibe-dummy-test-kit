@@ -1,0 +1,70 @@
+id: stage-10-chained-saas
+order: 10
+title: Chained realistic SaaS
+status: implemented
+focus: Combined local AI portfolio SaaS vulnerability scenario.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/login
+    - /api/projects
+    - /api/projects/:id
+    - /api/projects/:id/upload
+    - /api/projects/:id/ai-description
+    - /portfolio/:slug
+    - /api/admin/dashboard
+    - /api/users/:id
+services: []
+expectedFindingsFile: ../../expected/stage-10.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: CHAIN-001
+    title: Exposed privileged-looking key in frontend
+    severity: critical
+    files:
+      - src/frontend-config.ts
+  - id: CHAIN-002
+    title: Project IDOR / missing ownership check
+    severity: high
+    files:
+      - src/routes.ts
+  - id: CHAIN-003
+    title: AI-generated HTML rendered unsafely
+    severity: high
+    files:
+      - src/routes.ts
+      - src/mock-ai.ts
+  - id: CHAIN-004
+    title: Unsafe public file upload
+    severity: high
+    files:
+      - src/uploads.ts
+  - id: CHAIN-005
+    title: Frontend-only admin protection
+    severity: high
+    files:
+      - src/frontend-admin.ts
+      - src/routes.ts
+  - id: CHAIN-006
+    title: Overly permissive CORS/server config
+    severity: high
+    files:
+      - src/server-config.ts
+      - nginx/default.conf
+  - id: CHAIN-007
+    title: Excessive data exposure
+    severity: high
+    files:
+      - src/routes.ts
+      - src/demo-data.ts
+executiveRisk:
+  severity: critical
+  summary: Multiple issues combine into cross-user data exposure and stored content injection risk.
+safety:
+  - Everything is local-only.
+  - All keys, hashes, tokens, and billing IDs are fake training values.
+  - No external AI, payment, storage, or deployment integration is used.
+  - Upload output stays under the Stage 10 directory.
+

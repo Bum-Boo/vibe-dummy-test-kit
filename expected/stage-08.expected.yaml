@@ -1,0 +1,85 @@
+stage: stage-08-server-misconfig
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 4
+  medium: 3
+  low: 0
+  info: 0
+expectedFindings:
+  - id: INFRA-001
+    title: Container runs as root
+    category: server-misconfig
+    severity: medium
+    files:
+      - stages/stage-08-server-misconfig/Dockerfile
+    evidence:
+      - USER root
+      - container runs as root
+  - id: INFRA-002
+    title: .env copied or included in image context
+    category: server-misconfig
+    severity: high
+    files:
+      - stages/stage-08-server-misconfig/Dockerfile
+      - stages/stage-08-server-misconfig/.env
+    evidence:
+      - COPY .env /app/.env
+      - FAKE TRAINING VALUES ONLY
+  - id: INFRA-003
+    title: Missing security headers
+    category: security-headers
+    severity: medium
+    files:
+      - stages/stage-08-server-misconfig/nginx/default.conf
+    evidence:
+      - security headers are missing here
+      - Missing examples include Content-Security-Policy
+  - id: INFRA-004
+    title: Overly permissive CORS
+    category: server-misconfig
+    severity: high
+    files:
+      - stages/stage-08-server-misconfig/src/server-config.ts
+    evidence:
+      - 'origin: "*"'
+      - /api/admin/export
+  - id: INFRA-005
+    title: Debug endpoint exposed
+    category: server-misconfig
+    severity: medium
+    files:
+      - stages/stage-08-server-misconfig/src/server-config.ts
+    evidence:
+      - /api/debug/session
+      - debug endpoint is exposed
+  - id: INFRA-006
+    title: Sensitive headers logged
+    category: logging
+    severity: high
+    files:
+      - stages/stage-08-server-misconfig/src/request-logger.ts
+    evidence:
+      - "authorization: request.headers.authorization"
+      - "sessionToken: request.cookies.sessionToken"
+  - id: INFRA-007
+    title: Backup file publicly accessible
+    category: server-misconfig
+    severity: high
+    files:
+      - stages/stage-08-server-misconfig/public/backups/users-backup.json
+    evidence:
+      - FAKE_BACKUP_FOR_TRAINING_ONLY
+      - public directory
+plannedFindings: []
+notExpectedFindings:
+  - id: INFRA-SAFE-001
+    title: Safe contrast config should not be flagged
+    files:
+      - stages/stage-08-server-misconfig/safe/Dockerfile
+      - stages/stage-08-server-misconfig/safe/.dockerignore
+      - stages/stage-08-server-misconfig/safe/nginx.conf
+      - stages/stage-08-server-misconfig/safe/server-config.ts
+notes:
+  - Database and admin UI ports are included as localhost-only supporting misconfigurations.
+  - All secrets and backup contents are fake training values.

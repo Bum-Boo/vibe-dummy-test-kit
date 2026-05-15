@@ -1,0 +1,73 @@
+schema_version: "1.0"
+stage: stage-04-access-control
+expected_summary:
+  critical: 0
+  high: 3
+  medium: 0
+  low: 0
+  info: 0
+findings:
+  - id: BAC-001
+    title: Project detail endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: GET /api/projects/:id
+    evidence:
+      - const project = findProjectById(id);
+      - The query uses only the route parameter ID
+    must_include:
+      - object-level authorization
+      - ownership check
+      - route parameter ID
+      - changing the URL parameter
+    must_not_include:
+      - SQL injection
+  - id: BAC-002
+    title: Order detail endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: GET /api/orders/:id
+    evidence:
+      - const order = findOrderById(id);
+      - Alice can request Bob's order ID
+    must_include:
+      - object-level authorization
+      - ownership check
+      - route parameter ID
+    must_not_include:
+      - SQL injection
+  - id: BAC-003
+    title: Project delete endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: DELETE /api/projects/:id
+    evidence:
+      - const deletedProject = deleteProjectById(id);
+      - There is no ownership check such as ownerId: session.user.id.
+    must_include:
+      - object-level authorization
+      - ownership check
+      - route parameter ID
+      - destructive action
+    must_not_include:
+      - SQL injection
+allowed_false_positives:
+  - id: BAC-004
+    severity: info
+    reason: The safe route may be mentioned as a contrast, but it must not be reported as a vulnerability.
+severity_tolerance:
+  default: exact
+report_quality_checks:
+  executive_summary_required: false
+  plain_language_required: true
+  korean_lesson_required: true
+  must_include:
+    - object-level authorization
+    - ownership check
+    - changing the URL parameter
+  must_not_include:
+    - SQL injection
+

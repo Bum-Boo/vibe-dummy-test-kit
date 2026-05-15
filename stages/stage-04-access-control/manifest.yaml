@@ -1,0 +1,42 @@
+id: stage-04-access-control
+order: 4
+title: Broken access control and IDOR
+status: implemented
+focus: Object-level authorization mistakes where route parameter IDs are trusted without ownership checks.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/projects/:id
+    - /api/orders/:id
+    - /api/my/projects
+services: []
+expectedFindingsFile: ../../expected/stage-04.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: BAC-001
+    title: Project detail endpoint missing ownership check
+    severity: high
+    files:
+      - src/access-control-routes.ts
+  - id: BAC-002
+    title: Order detail endpoint missing ownership check
+    severity: high
+    files:
+      - src/access-control-routes.ts
+  - id: BAC-003
+    title: Project delete endpoint missing ownership check
+    severity: high
+    files:
+      - src/access-control-routes.ts
+negativeExamples:
+  - id: BAC-004
+    title: Safe current-user project list should not be flagged
+    route: GET /api/my/projects
+    reason: Uses findProjectsByOwnerId(session.user.id).
+safety:
+  - Demo data is in-memory and local only.
+  - Delete behavior only mutates local demo data for the current process.
+  - This stage is code-scannable and does not need a running vulnerable app.
+

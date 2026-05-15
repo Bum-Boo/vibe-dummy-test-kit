@@ -1,0 +1,25 @@
+{
+  "name": "bts-sec-staircase-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-only staircase benchmark lab for BTS_sec scanner demos and beginner security practice.",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "setup": "pnpm install",
+    "dashboard": "pnpm --filter @bts-sec/lab-dashboard dev",
+    "dev": "docker compose up --build",
+    "scan": "tsx scripts/scan.ts",
+    "run-scan": "tsx scripts/run-scan.ts",
+    "run-all-scans": "tsx scripts/run-all-scans.ts",
+    "compare": "tsx scripts/score-stage.ts",
+    "score": "tsx scripts/score-all.ts",
+    "score-json": "tsx scripts/score-all.ts --json",
+    "typecheck": "pnpm -r typecheck && tsc -p scripts/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "25.8.0",
+    "tsx": "4.22.0",
+    "typescript": "6.0.3",
+    "yaml": "2.9.0"
+  }
+}

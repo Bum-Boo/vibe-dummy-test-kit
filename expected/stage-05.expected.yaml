@@ -1,0 +1,64 @@
+stage: stage-05-api-data-exposure
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 4
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: API-001
+    title: Excessive data exposure in user detail endpoint
+    category: api-data-exposure
+    severity: high
+    files:
+      - stages/stage-05-api-data-exposure/src/api-data-routes.ts
+      - stages/stage-05-api-data-exposure/src/demo-data.ts
+    evidence:
+      - res.json({ user });
+      - excessive data exposure returns the full internal user object
+      - internalMemo
+      - billingCustomerId
+  - id: API-002
+    title: passwordHash or refreshToken returned in API response
+    category: api-data-exposure
+    severity: high
+    files:
+      - stages/stage-05-api-data-exposure/src/api-data-routes.ts
+      - stages/stage-05-api-data-exposure/src/demo-data.ts
+    evidence:
+      - passwordHash
+      - refreshToken
+      - Sensitive fields such as passwordHash, refreshToken, internalMemo, and billingCustomerId leave the API.
+  - id: API-003
+    title: Mass assignment risk from direct request body update
+    category: mass-assignment
+    severity: high
+    files:
+      - stages/stage-05-api-data-exposure/src/api-data-routes.ts
+    evidence:
+      - updateUserDirectly(session.user.id, req.body)
+      - direct request body update creates mass assignment
+  - id: API-004
+    title: Privileged fields modifiable by client input
+    category: mass-assignment
+    severity: high
+    files:
+      - stages/stage-05-api-data-exposure/src/api-data-routes.ts
+      - stages/stage-05-api-data-exposure/src/manual-demo.ts
+    evidence:
+      - role, plan, credit, isAdmin, and emailVerified
+      - role: "admin"
+      - isAdmin: true
+plannedFindings: []
+notExpectedFindings:
+  - id: API-SAFE-001
+    title: Safe update uses explicit allowlist
+    route: PATCH /api/users/me/safe
+    evidence:
+      - displayName
+      - portfolioTitle
+notes:
+  - All sensitive-looking fields contain fake training values only.
+  - Expected report should include both technical and plain-language explanations.
+

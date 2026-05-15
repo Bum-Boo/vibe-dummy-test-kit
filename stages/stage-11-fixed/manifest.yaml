@@ -1,0 +1,39 @@
+id: stage-11-fixed
+order: 11
+title: Fixed realistic SaaS
+status: implemented
+focus: Fixed version of the Stage 10 local AI portfolio SaaS that preserves functionality.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/login
+    - /api/projects
+    - /api/projects/:id
+    - /api/projects/:id/upload
+    - /api/projects/:id/ai-description
+    - /portfolio/:slug
+    - /api/admin/dashboard
+    - /api/users/:id
+services: []
+expectedFindingsFile: ../../expected/stage-11.expected.yaml
+codeScanRoots:
+  - .
+fixedControls:
+  - Removed frontend-accessible privileged fake key.
+  - Kept privileged storage policy in server-only code.
+  - Added owner checks to project object access.
+  - Rendered AI output as escaped text.
+  - Added upload size, MIME, and extension allowlists.
+  - Stored uploads outside the public web root.
+  - Enforced admin authorization from server-side session.
+  - Returned public user DTOs instead of internal records.
+  - Restricted CORS to localhost frontend origin.
+  - Added basic security headers.
+  - Added AI prompt length and rate limits.
+  - Removed sensitive data from logs.
+safety:
+  - Everything is local-only.
+  - Internal hashes, tokens, and billing IDs remain fake training values.
+  - Fixed scanner expectation is zero critical and zero high findings.
+

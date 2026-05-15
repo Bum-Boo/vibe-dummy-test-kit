@@ -1,0 +1,49 @@
+id: stage-03-auth
+order: 3
+title: Weak authentication and authorization boundaries
+status: implemented
+focus: Server-side auth mistakes that are not simple secret exposure.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/admin/users
+    - /api/auth/session
+    - /api/auth/login
+    - /api/auth/reset-password
+services: []
+expectedFindingsFile: ../../expected/stage-03.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: AUTH-001
+    title: Admin route relies on client-provided role
+    severity: high
+    files:
+      - src/vulnerable-auth-routes.ts
+  - id: AUTH-002
+    title: Token decoded without verification
+    severity: high
+    files:
+      - src/vulnerable-auth-routes.ts
+  - id: AUTH-003
+    title: Login endpoint has no visible rate limiting
+    severity: medium
+    files:
+      - src/vulnerable-auth-routes.ts
+  - id: AUTH-004
+    title: Password reset token missing expiration
+    severity: medium
+    files:
+      - src/vulnerable-auth-routes.ts
+  - id: AUTH-005
+    title: Middleware does not protect API route
+    severity: high
+    files:
+      - src/middleware.ts
+      - src/server.ts
+safety:
+  - All tokens and passwords are fake local training values.
+  - No email is sent and no real identity provider is used.
+  - This stage is code-scannable and does not need a running vulnerable app.
+

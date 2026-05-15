@@ -1,0 +1,13 @@
+stage-00-clean
+stage-01-secrets
+stage-02-frontend-config
+stage-03-auth
+stage-04-access-control
+stage-05-api-data-exposure
+stage-06-user-content-xss
+stage-07-file-upload
+stage-08-server-misconfig
+stage-09-ai-risks
+stage-10-chained-saas
+stage-11-fixed
+

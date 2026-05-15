@@ -1,0 +1,34 @@
+stage: stage-07-file-upload
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 2
+  low: 0
+  info: 0
+expectedFindings:
+  - id: FILE-001
+    title: Original filename used for uploaded file
+    category: file-upload
+    severity: high
+  - id: FILE-002
+    title: Upload saved under publicly served directory
+    category: file-upload
+    severity: high
+  - id: FILE-003
+    title: Missing file size limit
+    category: file-upload
+    severity: medium
+  - id: FILE-004
+    title: Missing MIME validation
+    category: file-upload
+    severity: medium
+  - id: FILE-005
+    title: SVG allowed without sanitization
+    category: file-upload
+    severity: high
+plannedFindings: []
+notExpectedFindings:
+  - id: FILE-006
+    title: Safe upload handler should not be flagged
+

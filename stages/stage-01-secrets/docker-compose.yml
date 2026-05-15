@@ -1,0 +1,11 @@
+# Stage 01 intentionally vulnerable fixture.
+# FAKE TRAINING VALUES ONLY. Do not connect this file to real services.
+
+services:
+  fake-stage-01-api:
+    image: node:22-alpine
+    command: ["node", "-e", "console.log('stage-01 fake secrets fixture only')"]
+    environment:
+      JWT_SECRET: fake_jwt_secret_for_training_only
+      DATABASE_URL: postgres://fake_user:fake_password@localhost:5432/fake_db
+

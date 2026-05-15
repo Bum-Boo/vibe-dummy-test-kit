@@ -1,0 +1,52 @@
+id: stage-07-file-upload
+order: 7
+title: Unsafe file upload
+status: implemented
+focus: Upload validation and local object storage mistakes.
+scanMode: code
+target:
+  baseUrl: http://localhost:8080
+  routes:
+    - /api/uploads/avatar
+    - /api/uploads/avatar/safe
+services: []
+expectedFindingsFile: ../../expected/stage-07.expected.yaml
+codeScanRoots:
+  - .
+intendedVulnerabilities:
+  - id: FILE-001
+    title: Original filename used for uploaded file
+    severity: high
+    files:
+      - src/vulnerable-upload-route.ts
+  - id: FILE-002
+    title: Upload saved under publicly served directory
+    severity: high
+    files:
+      - src/vulnerable-upload-route.ts
+  - id: FILE-003
+    title: Missing file size limit
+    severity: medium
+    files:
+      - src/vulnerable-upload-route.ts
+  - id: FILE-004
+    title: Missing MIME validation
+    severity: medium
+    files:
+      - src/vulnerable-upload-route.ts
+  - id: FILE-005
+    title: SVG allowed without sanitization
+    severity: high
+    files:
+      - src/vulnerable-upload-route.ts
+negativeExamples:
+  - id: FILE-006
+    title: Safe upload handler should not be flagged
+    files:
+      - src/safe-upload-route.ts
+    reason: Uses generated filenames, size limits, MIME and extension allowlists, and private storage.
+safety:
+  - Sample files are harmless local training files.
+  - Upload output stays under the Stage 07 directory.
+  - Reset uploads with make reset-uploads or pnpm exec tsx scripts/reset-uploads.ts.
+

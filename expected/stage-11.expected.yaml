@@ -1,0 +1,22 @@
+stage: stage-11-fixed
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 0
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings: []
+plannedFindings: []
+fixedAssertions:
+  - CHAIN-001 should not recur because browser config contains only public values.
+  - CHAIN-002 should not recur because project access is constrained by owner ID or server-side admin role.
+  - CHAIN-003 should not recur because AI output is escaped text, not trusted HTML.
+  - CHAIN-004 should not recur because uploads are validated, renamed, and stored outside public web root.
+  - CHAIN-005 should not recur because admin authorization uses server-side session role.
+  - CHAIN-006 should not recur because CORS is restricted and security headers are present.
+  - CHAIN-007 should not recur because user responses use public DTOs.
+notes:
+  - This stage is the fixed false-positive control for the chained SaaS scenario.
+  - Low/info recommendations are acceptable only if actionable and unrelated to the fixed Stage 10 critical/high classes.
+

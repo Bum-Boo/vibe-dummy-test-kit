@@ -1,0 +1,12 @@
+{
+  "label": "FAKE_BACKUP_FOR_TRAINING_ONLY",
+  "note": "This fake backup is intentionally placed under a public directory for Stage 08.",
+  "users": [
+    {
+      "id": "alice",
+      "email": "alice@example.test",
+      "sessionToken": "fake_session_token_for_training_only"
+    }
+  ]
+}
+

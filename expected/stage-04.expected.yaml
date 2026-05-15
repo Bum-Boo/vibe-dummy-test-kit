@@ -1,0 +1,47 @@
+stage: stage-04-access-control
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: BAC-001
+    title: Project detail endpoint missing ownership check
+    category: access-control
+    severity: high
+    files:
+      - stages/stage-04-access-control/src/access-control-routes.ts
+    evidence:
+      - const project = findProjectById(id);
+      - The query uses only the route parameter ID
+  - id: BAC-002
+    title: Order detail endpoint missing ownership check
+    category: access-control
+    severity: high
+    files:
+      - stages/stage-04-access-control/src/access-control-routes.ts
+    evidence:
+      - const order = findOrderById(id);
+      - Alice can request Bob's order ID
+  - id: BAC-003
+    title: Project delete endpoint missing ownership check
+    category: access-control
+    severity: high
+    files:
+      - stages/stage-04-access-control/src/access-control-routes.ts
+    evidence:
+      - const deletedProject = deleteProjectById(id);
+      - There is no ownership check such as ownerId: session.user.id.
+plannedFindings: []
+notExpectedFindings:
+  - id: BAC-004
+    title: Safe route should not be flagged
+    route: GET /api/my/projects
+    evidence:
+      - findProjectsByOwnerId(session.user.id)
+notes:
+  - Expected report language should mention object-level authorization, ownership check, route parameter ID, and changing the URL parameter.
+  - Expected report language must not describe this issue as SQL injection.
+

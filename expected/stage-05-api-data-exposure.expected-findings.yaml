@@ -1,0 +1,27 @@
+stage: stage-05-api-data-exposure
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 4
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: API-001
+    title: Excessive data exposure in user detail endpoint
+    category: api-data-exposure
+    severity: high
+  - id: API-002
+    title: passwordHash or refreshToken returned in API response
+    category: api-data-exposure
+    severity: high
+  - id: API-003
+    title: Mass assignment risk from direct request body update
+    category: mass-assignment
+    severity: high
+  - id: API-004
+    title: Privileged fields modifiable by client input
+    category: mass-assignment
+    severity: high
+plannedFindings: []
+

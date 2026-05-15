@@ -1,0 +1,45 @@
+id: stage-00-clean
+order: 0
+title: Clean baseline
+status: implemented
+focus: False-positive control stage using the safe baseline AI portfolio builder SaaS.
+target:
+  baseUrl: http://localhost:3001
+  routes:
+    - /
+    - /projects?userId=alice
+    - /projects/proj-alice-001?userId=alice
+    - /portfolio/alice-product-design
+    - /admin?userId=admin
+api:
+  baseUrl: http://localhost:4000/api
+  routes:
+    - /demo-users
+    - /projects?userId=alice
+    - /projects/proj-alice-001?userId=alice
+    - /portfolio/alice-product-design
+    - /admin?userId=admin
+services:
+  - target-frontend
+  - target-api
+  - nginx
+expectedFindingsFile: ../../expected/stage-00.expected.yaml
+appReferences:
+  - ../../apps/target-api/src/demoData.ts
+  - ../../apps/target-api/src/session.ts
+  - ../../apps/target-api/src/index.ts
+  - ../../apps/target-frontend/src/app/page.tsx
+  - ../../apps/target-frontend/src/app/projects/page.tsx
+  - ../../apps/target-frontend/src/app/projects/[id]/page.tsx
+  - ../../apps/target-frontend/src/app/portfolio/[slug]/page.tsx
+  - ../../apps/target-frontend/src/app/admin/page.tsx
+securityControls:
+  - explicit local demo session selection
+  - server-side ownership check before project detail responses
+  - admin role check before admin summary responses
+  - public portfolio route returns public projects only
+  - upload placeholder validates filename, MIME type, and size metadata
+  - AI text generation is deterministic and local-only
+  - API uses Helmet security headers
+  - Nginx baseline config sets X-Content-Type-Options and Referrer-Policy
+

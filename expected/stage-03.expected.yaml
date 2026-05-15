@@ -1,0 +1,58 @@
+stage: stage-03-auth
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 2
+  low: 0
+  info: 0
+expectedFindings:
+  - id: AUTH-001
+    title: Admin route relies on client-provided role
+    category: auth
+    severity: high
+    files:
+      - stages/stage-03-auth/src/vulnerable-auth-routes.ts
+    evidence:
+      - req.body.isAdmin === true
+  - id: AUTH-002
+    title: Token decoded without verification
+    category: auth
+    severity: high
+    files:
+      - stages/stage-03-auth/src/vulnerable-auth-routes.ts
+    evidence:
+      - decodeJwtWithoutVerification(token)
+      - never verifies the signature
+  - id: AUTH-003
+    title: Login endpoint has no visible rate limiting
+    category: auth
+    severity: medium
+    files:
+      - stages/stage-03-auth/src/vulnerable-auth-routes.ts
+    evidence:
+      - no rateLimit middleware or brute-force counter
+  - id: AUTH-004
+    title: Password reset token missing expiration
+    category: auth
+    severity: medium
+    files:
+      - stages/stage-03-auth/src/vulnerable-auth-routes.ts
+    evidence:
+      - passwordResetTokens.set(token, { userId: user.id })
+      - does not check expiresAt or issuedAt
+  - id: AUTH-005
+    title: Middleware does not protect API route
+    category: auth
+    severity: high
+    files:
+      - stages/stage-03-auth/src/middleware.ts
+      - stages/stage-03-auth/src/server.ts
+    evidence:
+      - "Intentionally missing: /api routes are not checked here."
+      - "/api/admin/users"
+plannedFindings: []
+notes:
+  - This stage focuses on server-side auth logic rather than secret scanning.
+  - All tokens, users, and passwords are fake local training fixtures.
+

@@ -1,0 +1,58 @@
+stage: stage-01-secrets
+status: implemented
+expectedSummary:
+  critical: 2
+  high: 3
+  medium: 0
+  low: 0
+  info: 0
+expectedFindings:
+  - id: SECRET-001
+    title: Service-role-like key in frontend-accessible code
+    category: secrets
+    severity: critical
+    files:
+      - stages/stage-01-secrets/.env.local
+      - stages/stage-01-secrets/src/lib/supabase.ts
+    evidence:
+      - NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=fake_service_role_key_for_training_only
+      - fake_service_role_key_for_training_only
+  - id: SECRET-002
+    title: Secret-like value in README
+    category: secrets
+    severity: high
+    files:
+      - stages/stage-01-secrets/README.md
+    evidence:
+      - STRIPE_SECRET_KEY=fake_stripe_secret_for_training_only
+  - id: SECRET-003
+    title: Secret-like value in CI workflow
+    category: secrets
+    severity: high
+    files:
+      - stages/stage-01-secrets/.github/workflows/deploy.yml
+    evidence:
+      - "OPENAI_API_KEY: fake_openai_key_for_training_only"
+      - "STRIPE_SECRET_KEY: fake_stripe_secret_for_training_only"
+  - id: SECRET-004
+    title: Secret-like value in built static JS
+    category: secrets
+    severity: critical
+    files:
+      - stages/stage-01-secrets/dist/static/main.js
+    evidence:
+      - fake_service_role_key_for_training_only
+      - fake_openai_key_for_training_only
+  - id: SECRET-005
+    title: Database URL in config
+    category: secrets
+    severity: high
+    files:
+      - stages/stage-01-secrets/.env.local
+      - stages/stage-01-secrets/docker-compose.yml
+    evidence:
+      - postgres://fake_user:fake_password@localhost:5432/fake_db
+plannedFindings: []
+notes:
+  - All evidence values are fake training strings.
+  - This stage is intentionally vulnerable and should be scanned as code.

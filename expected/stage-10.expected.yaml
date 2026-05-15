@@ -1,0 +1,91 @@
+stage: stage-10-chained-saas
+status: implemented
+expectedSummary:
+  critical: 1
+  high: 6
+  medium: 0
+  low: 0
+  info: 0
+executiveSummary:
+  overallRisk: critical
+  requiredLanguage:
+    - Multiple issues combine into cross-user data exposure and stored content injection risk.
+    - A user may access another user's project by changing an ID.
+    - AI-generated content is rendered as trusted HTML.
+    - Uploaded files are publicly hosted without adequate validation.
+    - Privileged-looking values appear in browser-accessible code.
+expectedFindings:
+  - id: CHAIN-001
+    title: Exposed privileged-looking key in frontend
+    category: chained-saas
+    severity: critical
+    files:
+      - stages/stage-10-chained-saas/src/frontend-config.ts
+    evidence:
+      - NEXT_PUBLIC_PORTFOLIO_SERVICE_ROLE_KEY
+      - fake_public_service_role_key_for_chain_training_only
+  - id: CHAIN-002
+    title: Project IDOR / missing ownership check
+    category: access-control
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/routes.ts
+    evidence:
+      - const project = findProjectById(id);
+      - misses ownerId/orgId check
+  - id: CHAIN-003
+    title: AI-generated HTML rendered unsafely
+    category: xss
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/routes.ts
+      - stages/stage-10-chained-saas/src/mock-ai.ts
+    evidence:
+      - AI-generated HTML is rendered as trusted HTML
+      - '${project.aiDescriptionHtml}'
+  - id: CHAIN-004
+    title: Unsafe public file upload
+    category: file-upload
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/uploads.ts
+    evidence:
+      - await writeFile(`./public/uploads/${filename}`, buffer);
+      - weak extension-only validation allows SVG
+  - id: CHAIN-005
+    title: Frontend-only admin protection
+    category: auth
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/frontend-admin.ts
+      - stages/stage-10-chained-saas/src/routes.ts
+    evidence:
+      - currentUser.isAdmin === true
+      - req.body.isAdmin === true
+  - id: CHAIN-006
+    title: Overly permissive CORS/server config
+    category: server-misconfig
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/server-config.ts
+      - stages/stage-10-chained-saas/nginx/default.conf
+    evidence:
+      - 'origin: "*"'
+      - Access-Control-Allow-Origin "*"
+  - id: CHAIN-007
+    title: Excessive data exposure
+    category: api-data-exposure
+    severity: high
+    files:
+      - stages/stage-10-chained-saas/src/routes.ts
+      - stages/stage-10-chained-saas/src/demo-data.ts
+    evidence:
+      - res.json({ user });
+      - passwordHash
+      - refreshToken
+      - billingCustomerId
+plannedFindings: []
+notes:
+  - The generated report should include both individual findings and a plain-language executive chain summary.
+  - All keys, tokens, hashes, and billing IDs are fake training values.
+

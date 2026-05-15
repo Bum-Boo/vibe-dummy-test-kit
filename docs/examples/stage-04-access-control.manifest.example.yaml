@@ -1,0 +1,84 @@
+schema_version: "1.0"
+stage: stage-04-access-control
+name: Broken Access Control / IDOR
+difficulty: intermediate
+description: Demonstrates object-level authorization mistakes where route parameter IDs are trusted without checking ownership.
+tags:
+  - access-control
+  - idor
+  - object-authorization
+local_only: true
+deterministic_notes:
+  - Demo users are Alice and Bob.
+  - Project IDs are project-alice and project-bob.
+  - Order IDs are order-alice and order-bob.
+intended_vulnerabilities:
+  - id: BAC-001
+    title: Project detail endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: GET /api/projects/:id
+    evidence:
+      - const project = findProjectById(id);
+      - The query uses only the route parameter ID
+    expected_report:
+      must_include:
+        - object-level authorization
+        - ownership check
+        - route parameter ID
+        - changing the URL parameter
+      must_not_include:
+        - SQL injection
+    fix_summary: Query by both the project ID and ownerId from the trusted server-side session.
+  - id: BAC-002
+    title: Order detail endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: GET /api/orders/:id
+    evidence:
+      - const order = findOrderById(id);
+      - Alice can request Bob's order ID
+    expected_report:
+      must_include:
+        - object-level authorization
+        - ownership check
+        - order ID
+      must_not_include:
+        - SQL injection
+    fix_summary: Query by both the order ID and userId from the trusted server-side session.
+  - id: BAC-003
+    title: Project delete endpoint missing ownership check
+    severity: high
+    category: access-control
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: DELETE /api/projects/:id
+    evidence:
+      - const deletedProject = deleteProjectById(id);
+      - There is no ownership check such as ownerId: session.user.id.
+    expected_report:
+      must_include:
+        - object-level authorization
+        - ownership check
+        - destructive action
+      must_not_include:
+        - SQL injection
+    fix_summary: Check ownership before deletion or delete with both id and ownerId.
+safe_contrasts:
+  - id: BAC-004
+    title: Safe current-user project list
+    file: stages/stage-04-access-control/src/access-control-routes.ts
+    route: GET /api/my/projects
+    why_safe: Uses the trusted current session and calls findProjectsByOwnerId(session.user.id).
+demo_steps:
+  - title: Alice reads Bob's project through vulnerable route
+    actor: alice
+    route: GET /api/projects/project-bob
+    expected_result: Bob's project is returned because the route does not check ownerId.
+  - title: Alice lists only her own projects through safe route
+    actor: alice
+    route: GET /api/my/projects
+    expected_result: Only Alice's project is returned because the query uses the session user ID.
+beginner_summary_ko: "IDOR는 사용자가 URL의 ID를 바꿔 다른 사람의 데이터를 볼 수 있는 문제입니다. 로그인만으로는 부족하며, 서버는 객체의 ownerId나 orgId를 반드시 확인해야 합니다."
+

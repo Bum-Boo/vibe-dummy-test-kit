@@ -1,0 +1,58 @@
+stage: stage-06-user-content-xss
+status: implemented
+expectedSummary:
+  critical: 0
+  high: 3
+  medium: 1
+  low: 0
+  info: 0
+expectedFindings:
+  - id: XSS-001
+    title: User-controlled bio rendered via dangerouslySetInnerHTML
+    category: xss
+    severity: high
+    files:
+      - stages/stage-06-user-content-xss/src/vulnerable-user-bio.tsx
+    evidence:
+      - dangerouslySetInnerHTML={{ __html: user.bio }}
+      - user.bio is user-controlled HTML
+  - id: XSS-002
+    title: Markdown raw HTML rendered without sanitization
+    category: xss
+    severity: high
+    files:
+      - stages/stage-06-user-content-xss/src/vulnerable-markdown.tsx
+    evidence:
+      - allowRawHtml: true
+      - sanitize: false
+      - raw HTML is enabled and sanitization is disabled
+  - id: XSS-003
+    title: Admin inquiry content rendered as HTML
+    category: xss
+    severity: high
+    files:
+      - stages/stage-06-user-content-xss/src/vulnerable-admin-inquiry.tsx
+    evidence:
+      - dangerouslySetInnerHTML={{ __html: inquiry.messageHtml }}
+      - admin pages are high-risk HTML sinks
+  - id: XSS-004
+    title: Missing or weak CSP
+    category: security-headers
+    severity: medium
+    files:
+      - stages/stage-06-user-content-xss/src/security-headers.ts
+    evidence:
+      - "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+      - this CSP is too broad
+plannedFindings: []
+notExpectedFindings:
+  - id: XSS-005
+    title: Safe escaped component should not be flagged
+    files:
+      - stages/stage-06-user-content-xss/src/safe-user-content.tsx
+    evidence:
+      - JSX text interpolation escapes user content by default
+notes:
+  - Demonstration strings must stay harmless and educational.
+  - CSP should be described as defense in depth, not a replacement for sanitization.
+
