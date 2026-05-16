@@ -6,6 +6,9 @@
   --panel: #ffffff;
   --subtle: #eef2f6;
   --line: #d8e0ea;
+  --notice-bg: #f8fafc;
+  --notice-line: #cbd5e1;
+  --notice-text: #475569;
   --accent: #176c72;
   --accent-strong: #0f4f54;
   --green: #1f7a4d;
@@ -40,11 +43,11 @@ a {
 .safety-banner {
   width: 100%;
   padding: 10px 16px;
-  border-bottom: 1px solid #f4ce8d;
-  background: #fff8eb;
-  color: #4f3900;
+  border-bottom: 1px solid var(--notice-line);
+  background: var(--notice-bg);
+  color: var(--notice-text);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -269,10 +272,11 @@ td span {
 
 .notice {
   margin: 0;
-  border-left: 4px solid var(--amber);
+  border: 1px solid var(--notice-line);
+  border-radius: 8px;
   padding: 12px 14px;
-  background: #fff8eb;
-  color: #4f3900;
+  background: var(--notice-bg);
+  color: var(--notice-text);
   line-height: 1.5;
 }
 
